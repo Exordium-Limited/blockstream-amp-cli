@@ -193,7 +193,7 @@ def utxos_list(asset_uuid, **kwargs):
 utxos_ls = utxos_list
 
 
-def utxos_blacklist(asset_uuid, txid, vout, **kwargs):
+def utxos_block(asset_uuid, txid, vout, **kwargs):
     url = api.getUrl(f"assets/{asset_uuid}/utxos/blacklist")
     payload = [{"txid": txid, "vout": int(vout)}]
     response = requests.post(
