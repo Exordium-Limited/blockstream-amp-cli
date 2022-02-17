@@ -304,6 +304,11 @@ def main():
     )
     parser_gaids_validate.add_argument("gaid", help="The GAID to validate")
 
+    parser_gaids_address = subparser_gaids.add_parser(
+        "address", help="Get a confidential for the given GAID."
+    )
+    parser_gaids_address.add_argument("gaid", help="The GAID")
+
     """ Managers """
     parser_managers = subparsers.add_parser("managers", help="Managers management.")
     subparser_managers = parser_managers.add_subparsers(
