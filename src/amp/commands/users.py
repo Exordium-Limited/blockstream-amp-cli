@@ -18,7 +18,7 @@ def list(**kwargs):
 ls = list
 
 
-def add(user_gaid, user_fullname, is_company, **kwargs):
+def create(user_gaid, user_fullname, is_company, **kwargs):
     url = api.getUrl("registered_users/add")
     payload = {
         "is_company": bool(is_company),
