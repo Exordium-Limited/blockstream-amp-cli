@@ -130,6 +130,19 @@ def reissue(asset_uuid, amount, **kwargs):
     print(json.dumps(distribution_data, indent=4))
 
 
+def burn(asset_uuid, amount, **kwargs):
+    url = api.getUrl(f"assets/{asset_uuid}/burn-request")
+    payload = {"amount": int(amount)}
+    response = requests.post(
+        url, data=json.dumps(payload), headers=api.getAuthenticationHeaders()
+    )
+    assert response.status_code == 200
+    distribution_data = json.loads(response.text)
+    # The json data in distribution_data would then be saved to a file for use in the Python client
+    # that carries out the distribution itself.
+    print(json.dumps(distribution_data, indent=4))
+
+
 def details(asset_uuid, **kwargs):
     # Asset details
     url = api.getUrl(f"assets/{asset_uuid}")

@@ -46,6 +46,14 @@ def main():
         "-amount", "--amount", help="Amount of asset to reissue", required=True
     )
 
+    parser_assets_burn = subparser_assets.add_parser(
+        "burn", help="Burn an asset (non-reversible operation!)."
+    )
+    parser_assets_burn.add_argument("asset_uuid", help="Asset UUID")
+    parser_assets_burn.add_argument(
+        "-amount", "--amount", help="Amount of asset to burn", required=True
+    )
+
     parser_assets_authorize = subparser_assets.add_parser(
         "authorize", help="Enforce the asset to be used only by authorized categories."
     )
