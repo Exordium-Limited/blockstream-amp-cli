@@ -1,4 +1,5 @@
 import argparse
+import pkg_resources
 
 
 def main():
@@ -6,6 +7,8 @@ def main():
     parser.add_argument("--profile", help="Profile name to load from ~/.amp/profiles")
 
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
+
+    parser_version = subparsers.add_parser("version", help="Version of the AMP CLI.")
 
     """ Assets Management """
     parser_assets = subparsers.add_parser("assets", help="Assets management.")
@@ -192,7 +195,7 @@ def main():
         "-a", "--amount", help="Assignment amount", required=True
     )
 
-    """ Catogories """
+    """ Categories """
     parser_categories = subparsers.add_parser(
         "categories", help="Categories management."
     )
@@ -289,7 +292,7 @@ def main():
     )
 
     parser_users_edit = subparser_users.add_parser("edit", help="Edit a user.")
-    parser_users_edit.add_argument("user_id", help="Asset UUID")
+    parser_users_edit.add_argument("user_id", help="User ID")
     parser_users_edit.add_argument(
         "-fullname", "--user_fullname", help="User Full Name", required=True
     )
@@ -299,7 +302,33 @@ def main():
         help="Remove a given user (non-reversible operation!).",
         aliases=["rm"],
     )
-    parser_users_remove.add_argument("user_id", help="Asset UUID")
+    parser_users_remove.add_argument("user_id", help="User ID")
+
+    parser_users_gaids = subparser_users.add_parser(
+        "gaids", help="Manage the GAIDs of a given user."
+    )
+    subparser_users_gaids = parser_users_gaids.add_subparsers(
+        help="sub-command help", dest="function"
+    )
+
+    parser_users_gaids_list = subparser_users_gaids.add_parser(
+        "list", help="List the GAIDs of a given user.", aliases=["ls"]
+    )
+    parser_users_gaids_list.add_argument("user_id", help="User ID")
+
+    parser_users_gaids_add = subparser_users_gaids.add_parser(
+        "add", help="Add a GAID to a given user."
+    )
+    parser_users_gaids_add.add_argument("user_id", help="User ID")
+    parser_users_gaids_add.add_argument("gaid", help="The GAID to add")
+
+    parser_users_gaids_setdefault = subparser_users_gaids.add_parser(
+        "setdefault", help="Set a GAID as default."
+    )
+    parser_users_gaids_setdefault.add_argument("user_id", help="User ID")
+    parser_users_gaids_setdefault.add_argument(
+        "gaid", help="The GAID to set as default"
+    )
 
     """ GAIDs """
     parser_gaids = subparsers.add_parser("gaids", help="GAID management.")
@@ -356,20 +385,28 @@ def main():
     """ Parsing of the command """
     args = parser.parse_args()
 
-    import importlib
+    if args.command == "version":
+        version = pkg_resources.require("blockstream-amp-cli")[0].version
+        print(f"Blockstream AMP CLI v{version}")
+        exit(0)
+    else:
+        import importlib
 
-    module = importlib.import_module(f"amp.commands.{args.command}")
-    action = getattr(
-        module,
-        f"{args.subcommand}_{args.function}" if "function" in args else args.subcommand,
-    )
+        module = importlib.import_module(f"amp.commands.{args.command}")
 
-    kwargs = vars(args)
+        action = getattr(
+            module,
+            f"{args.subcommand}_{args.function}"
+            if "function" in args
+            else args.subcommand,
+        )
 
-    # If a specific profile is requested, use it.
-    if args.profile:
-        import amp.api as api
+        kwargs = vars(args)
 
-        api.setProfile(args.profile)
+        # If a specific profile is requested, use it.
+        if args.profile:
+            import amp.api as api
 
-    action(**kwargs)
+            api.setProfile(args.profile)
+
+        action(**kwargs)
