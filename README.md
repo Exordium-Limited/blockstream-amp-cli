@@ -68,7 +68,6 @@ Then to use your `production` profile add the profile argument to the CLI calls 
 # Missing features
 
 - Remove category
-- User GAIDs management
 - Asset activities
 - Asset balance
 - And some more...

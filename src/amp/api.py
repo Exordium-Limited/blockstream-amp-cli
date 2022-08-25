@@ -26,7 +26,9 @@ def getUrl(endpoint):
     return f"{API_URL}/{endpoint}"
 
 
-def getAuthenticationHeaders(username=None, password=None, extra_headers={}):
+def getAuthenticationHeaders(
+    username=None, password=None, extra_headers={"content-type": "application/json"}
+):
     if username is None:
         username = profile.get("BLOCKSTREAM_AMP_USERNAME")
     if password is None:
@@ -44,7 +46,6 @@ def getAuthenticationHeaders(username=None, password=None, extra_headers={}):
     json_data = json.loads(response.text)
     token = json_data["token"]
     headers = {
-        "content-type": "application/json",
         "Authorization": f"token {token}",
         **extra_headers,
     }

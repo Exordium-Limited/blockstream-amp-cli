@@ -76,11 +76,8 @@ gaids_ls = gaids_list
 
 def gaids_add(user_id, gaid, **kwargs):
     url = api.getUrl(f"registered_users/{user_id}/gaids/add")
-    payload = {
-        "GAID": gaid,
-    }
     response = requests.post(
-        url, data=json.dumps(payload), headers=api.getAuthenticationHeaders()
+        url, data=json.dumps(gaid), headers=api.getAuthenticationHeaders()
     )
     assert response.status_code == 200
     print("\GAID added successfully")
@@ -88,11 +85,8 @@ def gaids_add(user_id, gaid, **kwargs):
 
 def gaids_setdefault(user_id, gaid, **kwargs):
     url = api.getUrl(f"registered_users/{user_id}/gaids/set-default")
-    payload = {
-        "GAID": gaid,
-    }
     response = requests.post(
-        url, payload=json.dumps(payload), headers=api.getAuthenticationHeaders()
+        url, data=json.dumps(gaid), headers=api.getAuthenticationHeaders()
     )
     assert response.status_code == 200
     print("\GAID set as default successfully")
